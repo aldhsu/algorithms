@@ -18,8 +18,8 @@ class SecondLowestNumber
 
     if result 
       if result > break_point || (result == break_point && (swap_index.nil? || digits[result] < digits[swap_index]))
-        @break_point = result
-        @lowest_index = digits[index_of_number]
+        @break_point = index_of_number
+        @swap_index = result
         return break_point
       end
     else
@@ -27,20 +27,22 @@ class SecondLowestNumber
     end
   end
 
-  def find
-    enum = (digits.length-1).downto(0).each
+  def next_intagram
+    enum = (digits.length-1).downto(1).each
 
-    while (current_index = enum.next) != break_point
+    while (current_index = enum.next) >= break_point
       find_swap_index(current_index)
     end
 
     return_number
+
   rescue StopIteration
     raise "No smaller integer next"
   end
 
   def return_number
     @digits[break_point], @digits[swap_index] = @digits[swap_index], @digits[break_point]
-    @digits
+    sorted_after = @digits[(swap_index + 1)..-1].chars.sort.join("")
+    "#{@digits[0..swap_index]}#{sorted_after}".to_i
   end
 end
