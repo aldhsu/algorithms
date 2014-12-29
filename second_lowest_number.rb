@@ -5,32 +5,33 @@ class SecondLowestNumber
 
   def initialize(integer)
     @digits = integer.to_s
-    @break_point = 0 # where to stop looking and where to swap
+    @break_point =  -1 # where to stop looking and where to swap
     @swap_index = nil # where to swap from
   end
 
   def find_swap_index(index_of_number)
     number = digits[index_of_number]
 
-    result = (digits.length - 1).downto(break_point).each do |index|
-      break index if digits[index] < number
+    result = nil
+    index_of_number.downto(break_point).each do |index|
+      if digits[index] < number
+        result = index
+        break
+      end
     end
 
-    if result 
-      if result > break_point || (result == break_point && (swap_index.nil? || digits[result] < digits[swap_index]))
-        @break_point = index_of_number
-        @swap_index = result
-        return break_point
+    if result
+      if result > break_point || (result == break_point && (!swap_index || digits[index_of_number] < digits[swap_index]))
+        @break_point = result
+        @swap_index = index_of_number
       end
-    else
-      return nil
     end
   end
 
   def next_intagram
-    enum = (digits.length-1).downto(1).each
+    enum = (digits.length-1).downto(0).each
 
-    while (current_index = enum.next) >= break_point
+    while (current_index = enum.next) > break_point
       find_swap_index(current_index)
     end
 
@@ -42,7 +43,7 @@ class SecondLowestNumber
 
   def return_number
     @digits[break_point], @digits[swap_index] = @digits[swap_index], @digits[break_point]
-    sorted_after = @digits[(swap_index + 1)..-1].chars.sort.join("")
-    "#{@digits[0..swap_index]}#{sorted_after}".to_i
+    sorted_after = @digits[(break_point + 1)..-1].chars.sort.join("")
+    "#{@digits[0..break_point]}#{sorted_after}".to_i
   end
 end

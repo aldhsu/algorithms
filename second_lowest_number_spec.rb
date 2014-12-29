@@ -26,7 +26,15 @@ describe SecondLowestNumber do
       let(:number) { 321 }
 
       it "returns an error" do
-        expect( service.new(number).next_intagram ).to eq ""
+        expect{ service.new(number).next_intagram }.to raise_error RuntimeError
+      end
+    end
+
+    context "number sequence of 121" do
+      let(:number) { 121 }
+
+      it "returns 211" do
+        expect( service.new(number).next_intagram ).to eq 211
         # expect{ service.new(number).next_intagram }.to raise_error
       end
     end
